@@ -24,3 +24,17 @@ scatter(target(1), target(2), 'ko', 'markerfacecolor', 'black', 'displayName', '
 text(target(1), target(2)-1, 'target');
 plot(main_path_x, main_path_y, 'k--', 'linewidth', 1);
 
+%% check for intersection with obstacles
+intersection_xy = [];
+for i = 1:4 % 4 lines in obstacles
+    if i == 4
+        next_point = 1;
+    else
+        next_point = i+1;
+    end
+    new_intersection_xy = intersection_point(start, target, Obst1(i,:), Obst1(next_point,:));
+    if (new_intersection_xy(1)~=Inf && new_intersection_xy(1)~=-Inf) && (new_intersection_xy(2)~=Inf && new_intersection_xy(2)~=-Inf)
+        intersection_xy = [intersection_xy ; new_intersection_xy]
+        scatter(new_intersection_xy(1), new_intersection_xy(2), 'bo', 'markerfacecolor', 'green');
+    end
+end
