@@ -17,7 +17,7 @@ function closest_order = order_closer_points(start_point, intersections)
         interList_elements = interList_elements-1;
         shortest_line = 100;
         ordered_list = [ordered_list ; intersections(shortest_index, :)]
-        intersections(i, :) = []
+        intersections(shortest_index, :) = []
         ordList_len = size(ordered_list,1);
     end
     closest_order = ordered_list;
