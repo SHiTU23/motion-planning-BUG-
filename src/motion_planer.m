@@ -43,3 +43,7 @@ for i = 1:4 % 4 lines in obstacles
     end
 end
 closest_intersections = order_closer_points(start, intersection_xy);
+
+%% Go towards Target point
+% Go from start point to first intersection
+plot_line(start, closest_intersections(1,:));
