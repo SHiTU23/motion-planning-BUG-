@@ -38,3 +38,4 @@ for i = 1:4 % 4 lines in obstacles
         scatter(new_intersection_xy(1), new_intersection_xy(2), 'bo', 'markerfacecolor', 'green');
     end
 end
+order_closer_points(start, intersection_xy)
