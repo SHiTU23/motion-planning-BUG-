@@ -3,7 +3,7 @@ clc
 
 %% Rect obstacles
 Obst1 = [7, 14 ;8, 14.5; 12, 11.5; 11, 11];
-
+draw_rect(Obst1);
 
 %% start and target points
 %%%% choose form the plot
