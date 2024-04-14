@@ -1,7 +1,4 @@
 function draw_rect(rectangle_points)
-    figure();
-    grid on
-    hold on
     for i = 1:4
         if i == 4
             next_point = 1;

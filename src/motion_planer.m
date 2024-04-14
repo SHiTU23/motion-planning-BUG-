@@ -1,6 +1,10 @@
 clear
 clc
 
+figure();
+grid on
+hold on
+
 %% Rect obstacles
 Obst1 = [7, 14 ;8, 14.5; 12, 11.5; 11, 11];
 draw_rect(Obst1);
@@ -38,4 +42,4 @@ for i = 1:4 % 4 lines in obstacles
         scatter(new_intersection_xy(1), new_intersection_xy(2), 'bo', 'markerfacecolor', 'green');
     end
 end
-order_closer_points(start, intersection_xy)
+closest_intersections = order_closer_points(start, intersection_xy);
