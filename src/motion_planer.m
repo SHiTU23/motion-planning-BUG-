@@ -1,3 +1,4 @@
+%%% BUG 2 Algorithm
 clear
 clc
 
