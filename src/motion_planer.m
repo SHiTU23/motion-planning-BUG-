@@ -7,12 +7,13 @@ hold on
     
 %% Rect obstacles
 Obst1 = [7, 14 ;8, 14.5; 12, 11.5; 11, 11];
+Obst3 = rect_generator([12, 14], -60);
 Obst2 = [17, 20; 18, 20.5; 22, 15.5; 21, 15];
-env = {Obst1, Obst2};
+env = {Obst1, Obst2, Obst3};
 
 draw_rect(Obst1);
 draw_rect(Obst2);
-
+draw_rect(Obst3);
 %% start and target points
 %%%% choose form the plot
 start = [5 , 10]; % x, y
@@ -48,32 +49,35 @@ for obstacle_num = 1:size(env,2)
         env{obstacle_num}(next_point,:)
         new_intersection_xy = intersection_point(start, target, env{obstacle_num}(i,:), env{obstacle_num}(next_point,:));
         if (new_intersection_xy(1)~=Inf && new_intersection_xy(1)~=-Inf) && (new_intersection_xy(2)~=Inf && new_intersection_xy(2)~=-Inf)
-            intersection_xy = [intersection_xy ; new_intersection_xy, i, next_point, obstacle_num]
+            intersection_xy = [intersection_xy ; new_intersection_xy, i, next_point, obstacle_num];
             scatter(new_intersection_xy(1), new_intersection_xy(2), 'bo', 'markerfacecolor', 'green');
         end
     end
     i =1;
 end
 closest_intersections = order_closer_points(start, intersection_xy);
-% 
-% %% Go towards Target point
-% % Go from start point to first intersection %% FIRST OBSTACLE
-% current_pose = start;
-% % for points = 1:size(closest_intersections,1)
-%      plot_line(current_pose, closest_intersections(1,1:2));
-%      current_pose = closest_intersections(1,1:2);
-%      nearest_point = find_nearest_point(current_pose, Obst1(closest_intersections(1,3),:), Obst1(closest_intersections(1,4),:));
-%      plot_line(current_pose, nearest_point);
-%      current_pose = nearest_point;
-%      
-%      Obst1(closest_intersections(1,3),:) = [];
-%      Obst1(closest_intersections(1,4),:) = [];
-%      next_point_togo = find_nearest_point(nearest_point, Obst1(1,:), Obst1(2,:));
-%      plot_line(current_pose, next_point_togo);
-%      current_pose = next_point_togo;
-%      plot_line(current_pose, closest_intersections(2,1:2));
-%      current_pose = closest_intersections(2,1:2);
-% % end
-% 
-% %% plot to the target
-% plot_line(current_pose, target);
+
+%% Go towards Target point
+% Go from start point to first intersection %% FIRST OBSTACLE
+current_pose = start;
+obstacle_id = 1;
+     
+for intersections = 1:2:size(closest_intersections,1)
+     obstacle_id = closest_intersections(intersections,5);
+     plot_line(current_pose, closest_intersections(intersections,1:2));
+     current_pose = closest_intersections(intersections,1:2);
+     nearest_point = find_nearest_point(current_pose, env{obstacle_id}(closest_intersections(intersections,3),:), env{obstacle_id}(closest_intersections(intersections,4),:));
+     plot_line(current_pose, nearest_point);
+     current_pose = nearest_point;
+     
+     env{obstacle_id}(closest_intersections(intersections,3),:) = [];
+     env{obstacle_id}(closest_intersections(intersections,4),:) = [];
+     next_point_togo = find_nearest_point(nearest_point, env{obstacle_id}(1,:), env{obstacle_id}(2,:));
+     plot_line(current_pose, next_point_togo);
+     current_pose = next_point_togo;
+     plot_line(current_pose, closest_intersections(intersections+1,1:2));
+     current_pose = closest_intersections(intersections+1,1:2);
+end
+
+%% plot to the target
+plot_line(current_pose, target);
