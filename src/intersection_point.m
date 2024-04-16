@@ -2,7 +2,7 @@
 function Intersection_coordinate = intersection_point(start_xy, target_xy,obstacle_P1_xy, obstacle_P2_xy)
     %% We have 4 points which is 2 lines to find the intersect between them
     x_range =[min(obstacle_P1_xy(1), obstacle_P2_xy(1)) ,max(obstacle_P1_xy(1), obstacle_P2_xy(1))];
-
+    y_range = [min(obstacle_P1_xy(2), obstacle_P2_xy(2)) ,max(obstacle_P1_xy(2), obstacle_P2_xy(2))];
     %% Start to Target line:
     %T_x = start_x:1:target_x;
     trajectory_m = (target_xy(2) - start_xy(2)) / (target_xy(1) - start_xy(1));
@@ -33,7 +33,11 @@ function Intersection_coordinate = intersection_point(start_xy, target_xy,obstac
             for i = 1:1:length(x)
                 if x(i)==obstacle_P1_xy(1)
                     y = trajectory_m * x(i) + trajectory_c;
-                    Intersection_coordinate = [x(i), y]; 
+                    if y >= y_range(1) && y <= y_range(2)
+                        Intersection_coordinate = [x(i), y]; 
+                    else
+                        Intersection_coordinate = [Inf, Inf];
+                    end
                 end
             end
     else
