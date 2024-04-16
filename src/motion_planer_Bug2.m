@@ -4,10 +4,11 @@ clc
 figure();
 grid on
 hold on
-    
+
+%%%%% BUG 2 FOR MOTION PLANNING %%%%%
 %% Rect obstacles
 Obst1 = [7, 14 ;8, 14.5; 12, 11.5; 11, 11];
-Obst3 = rect_generator([12, 14], -60);
+Obst3 = rect_generator([15, 15.5], -92);
 Obst2 = [17, 20; 18, 20.5; 22, 15.5; 21, 15];
 env = {Obst1, Obst2, Obst3};
 
@@ -67,14 +68,14 @@ for intersections = 1:2:size(closest_intersections,1)
      plot_line(current_pose, closest_intersections(intersections,1:2));
      current_pose = closest_intersections(intersections,1:2);
      nearest_point = find_nearest_point(current_pose, env{obstacle_id}(closest_intersections(intersections,3),:), env{obstacle_id}(closest_intersections(intersections,4),:));
-     plot_line(current_pose, nearest_point);
-     current_pose = nearest_point;
+     plot_line(current_pose, nearest_point(1:2));
+     current_pose = nearest_point(1:2);
      
      env{obstacle_id}(closest_intersections(intersections,3),:) = [];
      env{obstacle_id}(closest_intersections(intersections,4),:) = [];
-     next_point_togo = find_nearest_point(nearest_point, env{obstacle_id}(1,:), env{obstacle_id}(2,:));
-     plot_line(current_pose, next_point_togo);
-     current_pose = next_point_togo;
+     next_point_togo = find_nearest_point(current_pose, env{obstacle_id}(1,:), env{obstacle_id}(2,:));
+     plot_line(current_pose, next_point_togo(1:2));
+     current_pose = next_point_togo(1:2);
      plot_line(current_pose, closest_intersections(intersections+1,1:2));
      current_pose = closest_intersections(intersections+1,1:2);
 end
