@@ -7,7 +7,7 @@ function Intersection_coordinate = intersection_point(start_xy, target_xy,obstac
     %T_x = start_x:1:target_x;
     trajectory_m = (target_xy(2) - start_xy(2)) / (target_xy(1) - start_xy(1));
     trajectory_c = target_xy(2) - (trajectory_m * target_xy(1));
-    %trajectory_line = trajectory_m * T_x + trajectory_c;
+    % trajectory_line = trajectory_m * T_x + trajectory_c;
     
     %% one line of obstacle
     %O_x = obstacle_P1_x:1:obstacle_P2_x;
@@ -28,6 +28,14 @@ function Intersection_coordinate = intersection_point(start_xy, target_xy,obstac
     %% return intersection coordinates
     if (x_int <= x_range(2)) && (x_int>=x_range(1))
         Intersection_coordinate = [x_int, y_int];   
+    elseif isnan(x_int) && isnan(y_int)
+            x = [x_range(1):0.1:x_range(2)];
+            for i = 1:1:length(x)
+                if x(i)==obstacle_P1_xy(1)
+                    y = trajectory_m * x(i) + trajectory_c;
+                    Intersection_coordinate = [x(i), y]; 
+                end
+            end
     else
         Intersection_coordinate = [Inf, Inf];   
     end
