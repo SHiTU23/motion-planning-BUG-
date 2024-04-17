@@ -26,7 +26,7 @@ function Intersection_coordinate = intersection_point(start_xy, target_xy,obstac
     y_int = (a1 * obstacle_c - a2 * trajectory_c) / (a1*b2 - a2*b1);
     
     %% return intersection coordinates
-    if (x_int <= x_range(2)) && (x_int>=x_range(1))
+    if (x_int <= x_range(2)) && (x_int>=x_range(1)) && (x_int > start_xy(1) && y_int > start_xy(2))
         Intersection_coordinate = [x_int, y_int];   
     elseif isnan(x_int) && isnan(y_int)
             x = [x_range(1):0.1:x_range(2)];
