@@ -8,9 +8,10 @@ hold on
 %%%%% BUG 2 FOR MOTION PLANNING %%%%%
 %% Rect obstacles
 Obst1 = [7, 14 ;8, 14.5; 12, 11.5; 11, 11];
-Obst3 = rect_generator([15, 15.5], -92);
+Obst3 = rect_generator([15, 15.5], -60);
 Obst2 = [17, 20; 18, 20.5; 22, 15.5; 21, 15];
 env = {Obst1, Obst2, Obst3};
+env_copy = env;
 
 draw_rect(Obst1);
 draw_rect(Obst2);
@@ -64,18 +65,44 @@ current_pose = start;
 obstacle_id = 1;
      
 for intersections = 1:2:size(closest_intersections,1)
+    %%% first intersection
      obstacle_id = closest_intersections(intersections,5);
      plot_line(current_pose, closest_intersections(intersections,1:2));
      current_pose = closest_intersections(intersections,1:2);
-     nearest_point = find_nearest_point(current_pose, env{obstacle_id}(closest_intersections(intersections,3),:), env{obstacle_id}(closest_intersections(intersections,4),:));
-     plot_line(current_pose, nearest_point(1:2));
-     current_pose = nearest_point(1:2);
      
-     env{obstacle_id}(closest_intersections(intersections,3),:) = [];
-     env{obstacle_id}(closest_intersections(intersections,4),:) = [];
-     next_point_togo = find_nearest_point(current_pose, env{obstacle_id}(1,:), env{obstacle_id}(2,:));
-     plot_line(current_pose, next_point_togo(1:2));
-     current_pose = next_point_togo(1:2);
+     %%% nearest corner
+     nearest_point = find_nearest_point(current_pose, env{obstacle_id}(closest_intersections(intersections,3),:), env{obstacle_id}(closest_intersections(intersections,4),:));
+     plot_line(current_pose, nearest_point(1,1:2));
+     current_pose = nearest_point(1,1:2);
+    
+     %%% find the other two corners
+     %%% delete the two points from first line we went through
+     env_copy{obstacle_id}(closest_intersections(intersections,3),:) = 0
+     env_copy{obstacle_id}(closest_intersections(intersections,4),:) = 0
+     for i = 1:4
+         if env_copy{obstacle_id}(i,1) ~= 0 && env_copy{obstacle_id}(i,2) ~=0
+             third_point = i
+             env_copy{obstacle_id}(i,:) = 0;
+             break
+         end
+     end
+     for i = 1:4
+         if env_copy{obstacle_id}(i,1) ~= 0 && env_copy{obstacle_id}(i,2) ~=0
+             forth_point = i
+             env_copy{obstacle_id}(i,:) = 0;
+         end
+     end
+        
+     %%% check if intersection is on this side
+     intersection_onThisSide = is_onTheLine([current_pose;env{obstacle_id}(third_point,:)], closest_intersections(intersections+1,1:2));
+     if intersection_onThisSide == 0 %%% intersection is not in this line, go to the next corner
+         %%% third corner to go
+         next_point_togo = find_nearest_point(current_pose, env{obstacle_id}(third_point,:), env{obstacle_id}(forth_point,:));
+         plot_line(current_pose, next_point_togo(1,1:2));
+         current_pose = next_point_togo(1,1:2);
+
+     end
+     %%% next intersection
      plot_line(current_pose, closest_intersections(intersections+1,1:2));
      current_pose = closest_intersections(intersections+1,1:2);
 end
